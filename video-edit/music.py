@@ -1,5 +1,5 @@
 import numpy as np, wave
-sr=48000; D=63.0; n=int(sr*D); t=np.arange(n)/sr
+sr=48000; D=64.0; n=int(sr*D); t=np.arange(n)/sr
 rng=np.random.default_rng(3)
 bpm=104; beat=60/bpm
 out=np.zeros(n)
@@ -34,7 +34,7 @@ def whoosh(at,dur=0.9):
         a=0.02+0.5*(i/m)**2; s+=a*(x[i]-s); y[i]=s
     env=np.sin(np.pi*np.clip(tt/dur,0,1))**1.5
     add(y*env*1.4,at)
-whoosh(5.4); whoosh(49.5)
+whoosh(6.4); whoosh(50.45)
 out*=np.minimum(1,(D-t)/2.0)
 out/=np.max(np.abs(out))*1.1
 st=np.stack([out,out*0.98],1)
