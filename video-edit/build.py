@@ -5,16 +5,16 @@ V1=U+'9ef49bd0-111.mp4'; V2=U+'892bb559-____.mp4'
 OUTF=sys.argv[1] if len(sys.argv)>1 else B+'/out.mp4'
 icuts=[(0,5.60),(6.08,7.573)]; L1=sum(y-x for x,y in icuts); XF=0.4
 pieces=[(0,10.65,1.0,1.08,0),(11.02,19.02,1.22,1.28,-30),(19.40,27.40,1.0,1.06,0),(27.40,35.40,1.2,1.26,30),(35.40,45.20,1.0,1.08,0)]
-recap=[('r1.png',2.9),('r2.png',2.9),('r3.png',2.6),('r4.png',3.4)]
+recap=[('r4.png',3.4)]
 D2=sum(b-a for a,b,*_ in pieces); T2=L1-XF; R=sum(d for _,d in recap)
 T3=T2+D2-XF; TOT=T3+R
 caps=json.load(open(B+'/captions.json')) if os.path.exists(B+'/captions.json') else []
 inp=['-i',V1,'-i',V2,'-i',B+'/music.wav']
 def img(p): inp.extend(['-loop','1','-framerate','30','-i',p])
-img(P+'wm.png'); img(P+'hook.png'); img(P+'lower.png')
+img(P+'wm.png'); img(P+'lower.png')
 for i,_ in enumerate(caps): img(P+f'cap{i}.png')
 r0=len(inp)//2 if False else None
-base=3+3+len(caps)
+base=3+2+len(caps)
 for f,d in recap: inp.extend(['-loop','1','-framerate','30','-t',str(d),'-i',P+f])
 F=[]
 eq='eq=contrast=1.07:saturation=1.14:brightness=0.025:gamma=0.97'
@@ -37,15 +37,14 @@ F.append(''.join(rl)+f"concat=n={len(recap)}:v=1:a=0,settb=1/30,fps=30[vr]")
 F.append(f"[va][vb]xfade=transition=smoothleft:duration={XF}:offset={T2:.3f}[x1]")
 F.append(f"[x1][vr]xfade=transition=fade:duration={XF}:offset={T3:.3f}[x2]")
 cur='x2'
-def ov(idx,S,E,xexpr,yexpr,n):
+def ov(idx,S,E,xexpr,yexpr,n,pre=''):
     global cur
-    F.append(f"[{idx}:v]format=rgba,fade=t=in:st={S}:d=0.35:alpha=1,fade=t=out:st={E-0.35}:d=0.35:alpha=1[o{n}]")
+    F.append(f"[{idx}:v]{pre}format=rgba,fade=t=in:st={S}:d=0.35:alpha=1,fade=t=out:st={E-0.35}:d=0.35:alpha=1[o{n}]")
     F.append(f"[{cur}][o{n}]overlay=x='{xexpr}':y='{yexpr}':eof_action=pass:shortest=0[m{n}]"); cur=f'm{n}'
 ov(3,0.6,T3-0.1,'W-w-20','60',0)
-ov(4,0.3,3.9,'0',"250-110*pow(max(0,1-(t-0.3)/0.35),2)",1)
-ov(5,8.0,12.0,"60+0*t","330-80*pow(max(0,1-(t-8.0)/0.35),2)",2)
+ov(4,0.5,T3-0.1,'20','40',2,'scale=560:-1,')
 for i,c in enumerate(caps):
-    ov(6+i,c['t0'],c['t1'],'(W-w)/2',f"1380+40*pow(max(0,1-(t-{c['t0']})/0.25),2)",3+i)
+    ov(5+i,c['t0'],c['t1'],'(W-w)/2',f"1330+40*pow(max(0,1-(t-{c['t0']})/0.25),2)",3+i)
 F.append(f"[{cur}]format=yuv420p[vout]")
 # audio
 ac="volume=0.7,highpass=f=90,lowpass=f=14000,afftdn=nr=14:nf=-30,equalizer=f=220:t=q:w=1:g=-2,equalizer=f=3200:t=q:w=1:g=2.5,acompressor=threshold=-20dB:ratio=3:attack=5:release=90:makeup=3"

@@ -57,24 +57,28 @@ def caption(i,text):
     import re
     parts=re.split(r'(\{\{.*?\}\})',text); runs=[(p[2:-2],True) if p.startswith('{{') else (p,False) for p in parts if p]
     W=1000; d0=ImageDraw.Draw(Image.new('RGBA',(10,10)))
-    fn=F(70); fh=F(86)
-    # wrap by words keeping flags
-    words=[(t.strip(),True) if h else (w,False) for t,h in runs for w in ([t] if h else t.split())]
+    f=F(70)
+    toks=[]
+    for t,h in runs:
+        t=t.strip() if h else t
+        if h and tw(d0,t,f)<=W-160: toks.append((t,True))
+        else: toks.extend((w,h) for w in t.split())
     lines=[];cur=[];cw=0
-    for w,h in words:
-        wl=tw(d0,w+' ',fh if h else fn)
+    for w,h in toks:
+        wl=tw(d0,w,f)+tw(d0,' ',f)+(36 if h else 0)
         if cw+wl>W-80 and cur: lines.append(cur);cur=[];cw=0
         cur.append((w,h));cw+=wl
     lines.append(cur)
-    lh=130; H=lh*len(lines)+30
+    lh=118; H=lh*len(lines)+40
     im=Image.new('RGBA',(W+40,H),(0,0,0,0)); d=ImageDraw.Draw(im)
-    d.rounded_rectangle((0,0,W+39,H-1),44,fill=(8,30,48,205))
+    d.rounded_rectangle((0,0,W+39,H-1),44,fill=(8,30,48,215))
     for li,ln in enumerate(lines):
-        x=W+20-30; y=20+li*lh
+        x=W+20-30; base=20+li*lh+88
         for w,h in ln:
-            f=fh if h else fn; wl=tw(d,w,f); sp=tw(d,' ',f)
-            if h: d.rounded_rectangle((x-wl-18,y+8,x+18,y+112),30,fill=GOLD+(255,))
-            rt(d,x,y,w,f,NAVY if h else WHITE); x-=wl+sp+(14 if h else 0)
+            wl=tw(d,w,f); sp=tw(d,' ',f)
+            if h: d.rounded_rectangle((x-wl-18,base-92,x+18,base+28),30,fill=GOLD+(255,))
+            d.text((x,base),w,font=f,fill=NAVY if h else WHITE,anchor='rs',direction='rtl',language='ar')
+            x-=wl+sp+(36 if h else 0)
     im.save(OUT+f'cap{i}.png')
 
 def bg():
