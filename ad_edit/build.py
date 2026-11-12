@@ -7,7 +7,7 @@ import arabic_reshaper
 from bidi.algorithm import get_display
 
 D = os.path.dirname(os.path.abspath(__file__)); A = f"{D}/assets"; W = f"{D}/work"; os.makedirs(W, exist_ok=True)
-OUT = f"{D}/../output/Al-Qithara_Ad.mp4"; os.makedirs(os.path.dirname(OUT), exist_ok=True)
+OUT = f"{D}/../output/Al-Qithara_Ad_Full.mp4"; os.makedirs(os.path.dirname(OUT), exist_ok=True)
 FONT = f"{A}/tajawal.ttf"
 BLUE=(14,74,122); GOLD=(201,162,74); LGOLD=(242,201,100); CREAM=(245,241,232)
 # ---- أسعار الملازم: ضع السعر هنا (مثال: "5,000 د.ع") لتظهر بشارة السعر المميزة ----
@@ -29,12 +29,15 @@ def price_badge(img, price):
     d = ImageDraw.Draw(img); cx, cy = 870, 1180
     d.ellipse((cx-135,cy-135,cx+135,cy+135), fill=LGOLD, outline=(255,255,255), width=8)
     text_c(d,(cx,cy-52),ar("السعر"),52,BLUE); text_c(d,(cx,cy+22),ar(price),68,(150,20,20))
+def fit(d,t,size,maxw=840):
+    while size>40 and d.textlength(t,font=F(size))>maxw: size-=4
+    return size
 def lower_third(name, teacher, extra=None, price=None):
     im = canvas(); d = ImageDraw.Draw(im); h = 330 if extra else 280; y0 = 1400
     d.rounded_rectangle((60,y0,1020,y0+h), 36, fill=BLUE+(238,), outline=GOLD, width=5)
     d.rounded_rectangle((60+22,y0+22,60+34,y0+h-22), 6, fill=LGOLD)
-    text_c(d,(560,y0+85),name,104,(255,255,255))
-    text_c(d,(560,y0+185),ar(f"الأستاذ: {teacher}"),58,LGOLD)
+    text_c(d,(560,y0+85),name,fit(d,name,104),(255,255,255))
+    text_c(d,(560,y0+185),ar(f"الأستاذ: {teacher}"),fit(d,f"الأستاذ: {teacher}",58),LGOLD)
     if extra: text_c(d,(560,y0+265),ar(extra),44,(220,230,240))
     im = shadowed(im)
     if price: price_badge(im, price)
@@ -70,30 +73,41 @@ def endcard():
 
 # ---------- timeline ----------
 XF = 0.25
-# (name, kind, src_start, src_end, zoom0, zoom1, rot0, rot1, dx0, dx1, dy0, dy1, transition_in)
+# (name, src(0=video1,1=video2,2=endcard), a, b, z0,z1, rot0,rot1, dx0,dx1, dy0,dy1, transition_in)
 SEGS = [
- ("hook","v",10.0,11.6, 1.00,1.28, 0,0,  0,0,   0,0,   None),
- ("ti1", "v", 0.4, 3.2, 1.00,1.20, 0,0,  0,0,   0,0,   "slideleft"),
- ("ti2", "v", 3.4, 6.0, 1.26,1.26,-3,3, -40,40,-20,20, "circleopen"),
- ("ti3", "v", 6.0, 8.0, 1.42,1.08, 0,0, -90,0,  60,0,   "zoomin"),
- ("sr1", "v", 8.9,12.0, 1.00,1.22, 0,0,  0,0,   0,0,   "wipeleft"),
- ("both","v",13.2,15.4, 1.24,1.24, 3,-3, 50,-50,-20,20, "slideright"),
- ("sr2", "v",15.6,17.2, 1.30,1.00, 0,0,  0,0,   0,0,   "fadewhite"),
- ("end", "e", 0,2.4,   1.00,1.06, 0,0,  0,0,   0,0,   "fade"),
+ ("hook",0,10.0,11.6, 1.00,1.28, 0,0,  0,0,   0,0,   None),
+ ("ti1", 0, 0.4, 3.2, 1.00,1.20, 0,0,  0,0,   0,0,   "slideleft"),
+ ("ti2", 0, 3.4, 6.0, 1.26,1.26,-3,3, -40,40,-20,20, "circleopen"),
+ ("sr1", 0, 8.9,12.0, 1.00,1.22, 0,0,  0,0,   0,0,   "wipeleft"),
+ ("phy", 1, 8.0,12.6, 1.00,1.12, 0,0, -70,-70, 0,0,   "slideright"),
+ ("en1", 1,19.4,23.9, 1.05,1.22, 0,0, -30,-30, 0,0,   "zoomin"),
+ ("en2", 1,24.4,28.6, 1.22,1.22,-2.5,2.5,-30,30,-10,10,"wipeleft"),
+ ("ar",  1,35.4,40.4, 1.00,1.18, 0,0, -50,-30, 0,0,   "circleopen"),
+ ("ch1", 1,46.8,52.2, 1.20,1.05, 0,0, -20,-20, 0,0,   "slideleft"),
+ ("ch2", 1,53.0,56.6, 1.22,1.22, 2.5,-2.5,-20,20,-10,10,"fadewhite"),
+ ("end", 2, 0,2.4,   1.00,1.06, 0,0,  0,0,   0,0,   "fade"),
 ]
 L = [s[3]-s[2] for s in SEGS]
 starts=[0.0]; M=L[0]
 for i in range(1,len(SEGS)): starts.append(M-XF); M += L[i]-XF
 TOTAL = M; END_START = starts[-1]
 print("segment starts", [round(x,2) for x in starts], "total", round(TOTAL,2))
-st = dict(zip([s[0] for s in SEGS], starts))
+st = dict(zip([s[0] for s in SEGS], starts)); Ld = dict(zip([s[0] for s in SEGS], L))
 
-OVL = []  # (png, t0, t1, slide_px)
+OVL = []
 def add(name, im, t0, t1, slide=70): p=f"{W}/{name}.png"; im.save(p); OVL.append((p,t0,t1,slide))
 add("hook", hook(), 0.15, st["ti1"]+0.1, 50)
-add("t_ti", lower_third("Treasure Island","Rahwan Azad",price=PRICES["Treasure Island"]), st["ti1"]+0.3, st["ti2"]+1.9)
-add("t_sr", lower_third("Sunrise Twelve","Rahwan Azad","معهد نيروز · Newroz Institute",price=PRICES["Sunrise Twelve"]), st["sr1"]+0.3, st["sr1"]+3.0)
-add("cta", cta(), st["both"]+0.2, END_START-0.1)
+add("t_ti", lower_third("Treasure Island","Rahwan Azad",price=PRICES.get("Treasure Island")), st["ti1"]+0.3, st["ti2"]+1.9)
+add("t_sr", lower_third("Sunrise Twelve","Rahwan Azad","معهد نيروز · Newroz Institute",price=PRICES.get("Sunrise Twelve")), st["sr1"]+0.3, st["sr1"]+3.0)
+CARDS = [("phy","المعاصر في الفيزياء","علي الذهبي","السادس العلمي · الجزء الأول"),
+         ("en1","الملتقى في اللغة الإنكليزية","محمد العبيدي","Part Two · السادس الإعدادي"),
+         ("en2","دورة قطع الخارجية","محمد العبيدي","مع الوزاريات · السادس الإعدادي"),
+         ("ar","موسوعة المعموري","هشام المعموري","في قواعد اللغة العربية · الجزء الثاني"),
+         ("ch1","شفرة الكيمياء","فاضل الهاشمي","السادس العلمي · الجزء الثاني"),
+         ("ch2","الملخص الذهبي في الكيمياء","فاضل الهاشمي","السادس العلمي")]
+for k,title,teacher,extra in CARDS:
+    add("c_"+k, lower_third(title,teacher,extra,price=PRICES.get(title)), st[k]+0.3, st[k]+min(Ld[k]-0.35,3.6))
+add("cta", cta(), st["ch2"]+Ld["ch2"]-1.5, END_START-0.1)   # shown right before the end card
 add("wm", watermark(), 1.3, END_START+0.1, 0)
 endcard().convert("RGB").save(f"{W}/end.png")
 
@@ -138,49 +152,50 @@ def music(total):
         w.setnchannels(2); w.setsampwidth(2); w.setframerate(SR); w.writeframes((out.T*32767).astype("<i2").tobytes())
 music(TOTAL)
 
-# ---------- ffmpeg graph ----------
-inputs=["-i",f"{A}/video1.mp4","-loop","1","-t",str(L[-1]+0.5),"-i",f"{W}/end.png","-i",f"{W}/music.wav"]
+# ---------- ffmpeg graph (video only) ----------
+SRCP=[f"{A}/video1.mp4",f"{A}/video2.mp4"]
+inputs=["-i",SRCP[0],"-i",SRCP[1],"-loop","1","-t",str(L[-1]+0.5),"-i",f"{W}/end.png"]
 for p,t0,t1,_ in OVL: inputs+=["-loop","1","-t",f"{TOTAL:.2f}","-i",p]
 fc=[]
 for i,(n,k,a,b,z0,z1,r0,r1,dx0,dx1,dy0,dy1,tr) in enumerate(SEGS):
     d=b-a; p=lambda v0,v1: f"({v0}+({v1}-{v0})*t/{d:.3f})"
-    src = f"[0:v]trim={a}:{b},setpts=PTS-STARTPTS,hqdn3d=3:2:4:3,scale=1080:1920:flags=lanczos,unsharp=5:5:0.9:5:5:0.0" if k=="v" else f"[1:v]trim=0:{d},setpts=PTS-STARTPTS,fps=30"
+    src = f"[{k}:v]trim={a}:{b},setpts=PTS-STARTPTS,hqdn3d=3:2:4:3,scale=1080:1920:flags=lanczos,unsharp=5:5:0.9:5:5:0.0" if k<2 else f"[2:v]trim=0:{d},setpts=PTS-STARTPTS,fps=30"
     chain=f"{src},scale=w='trunc(1080*{p(z0,z1)}/2)*2':h='trunc(1920*{p(z0,z1)}/2)*2':eval=frame:flags=bicubic"
     if r0 or r1: chain+=f",rotate=a='({p(r0,r1)})*PI/180':c=black"
     chain+=f",crop=1080:1920:x='(iw-1080)/2+{p(dx0,dx1)}':y='(ih-1920)/2+{p(dy0,dy1)}'"
-    if k=="v": chain+=",eq=brightness=0.035:contrast=1.10:saturation=1.22:gamma=1.04,vignette=PI/6"
+    if k<2: chain+=",eq=brightness=0.035:contrast=1.10:saturation=1.22:gamma=1.04,vignette=PI/6"
     chain+=f",fps=30,format=yuv420p,setsar=1[v{i}]"; fc.append(chain)
 m="v0"; cum=L[0]
 for i in range(1,len(SEGS)):
     fc.append(f"[{m}][v{i}]xfade=transition={SEGS[i][12]}:duration={XF}:offset={cum-XF:.3f}[x{i}]"); m=f"x{i}"; cum+=L[i]-XF
 for j,(p,t0,t1,sl) in enumerate(OVL):
-    idx=3+j; fade_in=0.3; dur=t1-t0
-    fc.append(f"[{idx}:v]format=rgba,fade=t=in:st=0:d={fade_in}:alpha=1,fade=t=out:st={max(dur-0.3,0.1):.2f}:d=0.3:alpha=1,setpts=PTS+{t0:.3f}/TB[o{j}]")
+    idx=3+j; dur=t1-t0
+    fc.append(f"[{idx}:v]format=rgba,fade=t=in:st=0:d=0.3:alpha=1,fade=t=out:st={max(dur-0.3,0.1):.2f}:d=0.3:alpha=1,setpts=PTS+{t0:.3f}/TB[o{j}]")
     ex = f"y='{sl}*pow(max(0,1-(t-{t0:.3f})/0.4),2)'" if sl else "y=0"
     fc.append(f"[{m}][o{j}]overlay=x=0:{ex}:enable='between(t,{t0:.3f},{t1:.3f})':eof_action=pass[ov{j}]"); m=f"ov{j}"
 fc.append(f"[{m}]format=yuv420p[vout]")
 cmd=["ffmpeg","-y","-v","error","-stats",*inputs,"-filter_complex",";".join(fc),"-map","[vout]",
-     "-t",f"{TOTAL:.3f}","-c:v","libx264","-preset","slow","-crf","17","-pix_fmt","yuv420p","-r","30","-an",f"{W}/video_only.mp4"]
+     "-t",f"{TOTAL:.3f}","-c:v","libx264","-preset","medium","-crf","18","-pix_fmt","yuv420p","-r","30","-an",f"{W}/video_only.mp4"]
 rc=subprocess.call(cmd)
 if rc: sys.exit(rc)
-# ---------- audio (numpy, no complex ffmpeg graph) ----------
-def run(*a): subprocess.check_call(["ffmpeg","-y","-v","error",*a])
-run("-i",f"{A}/video1.mp4","-vn","-af","highpass=f=90,lowpass=f=11000,afftdn=nr=14:nf=-30,equalizer=f=250:t=q:w=1:g=-2,equalizer=f=3200:t=q:w=1.2:g=3.5,acompressor=threshold=-20dB:ratio=3:attack=8:release=120:makeup=4,alimiter=limit=0.95","-ac","2","-ar","44100",f"{W}/voice_full.wav")
+# ---------- audio (numpy) ----------
 import wave
+def run(*a): subprocess.check_call(["ffmpeg","-y","-v","error",*a])
+AF="highpass=f=90,lowpass=f=11000,afftdn=nr=14:nf=-30,equalizer=f=250:t=q:w=1:g=-2,equalizer=f=3200:t=q:w=1.2:g=3.5,acompressor=threshold=-20dB:ratio=3:attack=8:release=120:makeup=4,alimiter=limit=0.95"
+for q in (0,1): run("-i",SRCP[q],"-vn","-af",AF,"-ac","2","-ar","44100",f"{W}/voice{q}.wav")
 def rd(p):
     with wave.open(p) as w: return np.frombuffer(w.readframes(w.getnframes()),"<i2").reshape(-1,2).T.astype(np.float64)/32768
-V=rd(f"{W}/voice_full.wav"); Mu=rd(f"{W}/music.wav")
+VO=[rd(f"{W}/voice0.wav"),rd(f"{W}/voice1.wav")]; Mu=rd(f"{W}/music.wav")
 xf=int(XF*SR); voice=np.zeros((2,0))
 for (n,k,a,b,*_) in SEGS:
-    seg = V[:,int(a*SR):int(b*SR)] if k=="v" else np.zeros((2,int((b-a)*SR)))
+    seg = VO[k][:,int(a*SR):int(b*SR)] if k<2 else np.zeros((2,int((b-a)*SR)))
     if voice.shape[1]==0: voice=seg.copy(); continue
     ramp=np.linspace(0,1,xf); voice[:,-xf:]=voice[:,-xf:]*(1-ramp)+seg[:,:xf]*ramp
     voice=np.concatenate([voice,seg[:,xf:]],axis=1)
 N=int(TOTAL*SR); voice=np.pad(voice,((0,0),(0,max(0,N-voice.shape[1]))))[:,:N]; Mu=np.pad(Mu,((0,0),(0,max(0,N-Mu.shape[1]))))[:,:N]
 env=np.abs(voice).mean(0); win=int(0.05*SR); env=np.convolve(env,np.ones(win)/win,"same"); env=np.convolve(env,np.ones(int(0.3*SR))/int(0.3*SR),"same")
 duck=1-0.65*np.clip(env/0.04,0,1)
-mix=voice*1.0+Mu*0.55*duck
-mix=np.tanh(mix*0.9)/np.tanh(0.9)
+mix=voice+Mu*0.55*duck; mix=np.tanh(mix*0.9)/np.tanh(0.9)
 with wave.open(f"{W}/mix.wav","wb") as w:
     w.setnchannels(2); w.setsampwidth(2); w.setframerate(SR); w.writeframes((np.clip(mix.T,-1,1)*32767).astype("<i2").tobytes())
 run("-i",f"{W}/mix.wav","-af","loudnorm=I=-14:TP=-1.5:LRA=9","-ar","44100","-c:a","aac","-b:a","192k",f"{W}/audio.m4a")
