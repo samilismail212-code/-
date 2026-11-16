@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<style>
+@font-face{font-family:Kufi;src:url(node_modules/@fontsource-variable/noto-kufi-arabic/files/noto-kufi-arabic-arabic-wght-normal.woff2) format("woff2");font-weight:100 900}
+@font-face{font-family:Kufi;src:url(node_modules/@fontsource-variable/noto-kufi-arabic/files/noto-kufi-arabic-latin-wght-normal.woff2) format("woff2");font-weight:100 900;unicode-range:U+0000-00FF}
+@font-face{font-family:Vazir;src:url(node_modules/@fontsource-variable/vazirmatn/files/vazirmatn-arabic-wght-normal.woff2) format("woff2");font-weight:100 900}
+@font-face{font-family:Vazir;src:url(node_modules/@fontsource-variable/vazirmatn/files/vazirmatn-latin-wght-normal.woff2) format("woff2");font-weight:100 900;unicode-range:U+0000-00FF}
+:root{--navy:#0d3554;--navy2:#071f33;--blue:#1c6e9c;--gold:#c9a45c;--gold2:#e6cd94;--cream:#f4f0e6}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--navy2)}
+body{font-family:Kufi,Vazir,sans-serif;color:var(--cream)}
+*{animation-play-state:paused!important}
+.stage{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 35%,#15517c 0%,var(--navy) 45%,var(--navy2) 100%);overflow:hidden}
+.bgsvg{position:absolute;inset:0;opacity:.16}
+.bgsvg path{fill:none;stroke:var(--gold);stroke-width:3;stroke-linecap:round;stroke-dasharray:1600;stroke-dashoffset:1600;animation:draw 6000ms ease-out both}
+.bgsvg circle{fill:var(--gold2);opacity:0;animation:fade 800ms both}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.glow{position:absolute;width:1400px;height:1400px;border-radius:50%;left:-160px;top:200px;background:radial-gradient(circle,rgba(201,164,92,.20),transparent 60%);animation:drift 22000ms linear both}
+@keyframes drift{from{transform:translateY(-200px) scale(.9)}to{transform:translateY(260px) scale(1.15)}}
+.frame{position:absolute;inset:44px;border:2px solid rgba(201,164,92,.45);border-radius:36px}
+.frame:after{content:"";position:absolute;inset:14px;border:1px solid rgba(201,164,92,.2);border-radius:26px}
+
+.scene{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;text-align:center}
+@keyframes scene{0%{opacity:0}7%{opacity:1}93%{opacity:1}100%{opacity:0}}
+@keyframes sceneStay{0%{opacity:0}10%{opacity:1}100%{opacity:1}}
+@keyframes up{from{opacity:0;transform:translateY(70px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{opacity:0;transform:scale(.55)}70%{opacity:1;transform:scale(1.05)}100%{opacity:1;transform:scale(1)}}
+@keyframes slide{from{opacity:0;transform:translateX(220px)}to{opacity:1;transform:none}}
+@keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes ring{from{stroke-dashoffset:2200}to{stroke-dashoffset:0}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes zoom{from{transform:scale(1)}to{transform:scale(1.07)}}
+@keyframes shine{from{transform:translateX(-140%) skewX(-20deg)}to{transform:translateX(260%) skewX(-20deg)}}
+.e{animation-fill-mode:both;animation-timing-function:cubic-bezier(.2,.8,.2,1)}
+
+/* scene 1 */
+#s1{animation:scene 3700ms both}
+#s1 .small{font-size:50px;color:var(--gold2);font-weight:500;letter-spacing:0;animation:up 800ms 250ms both}
+#s1 h1{font-size:112px;line-height:1.5;font-weight:800;margin-top:30px}
+#s1 h1 span{display:block}
+#s1 h1 .a{animation:up 800ms 650ms both}
+#s1 h1 .b{animation:up 800ms 1150ms both;color:var(--gold2)}
+#s1 h1 .c{animation:pop 900ms 1750ms both;font-size:128px}
+.rule{width:300px;height:5px;border-radius:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:46px auto}
+#s1 .rule{animation:grow 900ms 500ms both}
+
+/* medallion */
+.med{position:relative;border-radius:50%;background:var(--cream);overflow:hidden;box-shadow:0 30px 90px rgba(0,0,0,.5),0 0 0 6px rgba(201,164,92,.5)}
+.med img{position:absolute}
+.med .sh{position:absolute;top:0;bottom:0;width:40%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.75),transparent)}
+.medwrap{position:relative}
+.medwrap svg{position:absolute;overflow:visible}
+.medwrap svg circle{fill:none;stroke:var(--gold2);stroke-width:5;stroke-linecap:round}
+
+/* scene 2 */
+#s2{animation:scene 4100ms 3400ms both}
+#s2 .medwrap{animation:pop 1100ms 3600ms both}
+#s2 .med{width:760px;height:760px}
+#s2 .med img{width:868.6px;left:-55.5px;top:-43.4px;animation:zoom 4000ms 3600ms both linear}
+#s2 .sh{animation:shine 1300ms 4500ms both}
+#s2 svg{left:-40px;top:-40px;width:840px;height:840px;animation:spin 16000ms 3400ms linear both}
+#s2 svg circle{stroke-dasharray:240 60 30 60;animation:fade 900ms 4000ms both}
+#s2 h2{font-size:118px;font-weight:800;margin-top:80px;animation:up 800ms 4500ms both}
+#s2 p{font-size:60px;color:var(--gold2);font-weight:500;margin-top:8px;animation:up 800ms 4850ms both}
+
+/* scene 3 */
+#s3{animation:scene 8100ms 7300ms both;justify-content:flex-start;padding-top:170px}
+#s3 h2{font-size:104px;font-weight:800;animation:up 700ms 7500ms both}
+#s3 h2 b{color:var(--gold2)}
+#s3 .rule{margin:26px auto 50px;animation:grow 800ms 7700ms both}
+.card{width:900px;height:216px;margin-bottom:30px;border-radius:34px;background:linear-gradient(135deg,#fbf8f0,#ebe3d0);color:var(--navy);display:flex;align-items:center;gap:36px;padding:0 40px;text-align:right;box-shadow:0 18px 44px rgba(0,0,0,.35);border-right:12px solid var(--gold);animation:slide 750ms both cubic-bezier(.2,.8,.2,1)}
+.card:nth-child(odd){--x:1}
+.ico{flex:none;width:136px;height:136px;border-radius:50%;background:linear-gradient(135deg,#17608c,var(--navy));display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 5px var(--gold)}
+.ico svg{width:76px;height:76px;fill:none;stroke:var(--gold2);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.card .t{font-size:66px;font-weight:800;line-height:1.35}
+.card .d{font-size:36px;font-weight:500;color:#5b6b78;font-family:Vazir,Kufi;line-height:1.4}
+
+/* scene 4 */
+#s4{animation:scene 3700ms 15200ms both}
+#s4 .books{animation:pop 900ms 15400ms both}
+#s4 .books svg{width:380px;height:380px}
+#s4 h2{font-size:150px;font-weight:900;color:var(--gold2);animation:up 700ms 15650ms both;line-height:1.4}
+#s4 h3{font-size:74px;font-weight:700;animation:up 700ms 15900ms both}
+.pills{display:flex;gap:36px;margin-top:56px}
+.pill{font-size:72px;font-weight:800;padding:20px 64px 26px;border-radius:999px}
+.pill.ar{background:var(--cream);color:var(--navy);animation:pop 800ms 16250ms both}
+.pill.ku{background:linear-gradient(135deg,var(--gold2),var(--gold));color:var(--navy2);animation:pop 800ms 16550ms both}
+#s4 .ku-line{font-family:Vazir,Kufi;font-size:54px;font-weight:600;margin-top:60px;color:var(--cream);opacity:.92;animation:up 700ms 16950ms both}
+
+/* scene 5 */
+#s5{animation:sceneStay 3200ms 18800ms both}
+#s5 .medwrap{animation:pop 1000ms 18950ms both}
+#s5 .med{width:560px;height:560px}
+#s5 .med img{width:640px;left:-40.9px;top:-32px}
+#s5 .sh{animation:shine 1300ms 20000ms both}
+#s5 svg{left:-32px;top:-32px;width:624px;height:624px;animation:spin 20000ms 18800ms linear both}
+#s5 svg circle{stroke-dasharray:180 50 24 50}
+#s5 h2{font-size:124px;font-weight:900;margin-top:64px;animation:up 700ms 19400ms both}
+#s5 p{font-size:60px;font-weight:600;color:var(--gold2);animation:up 700ms 19650ms both}
+#s5 .rule{animation:grow 800ms 19800ms both;margin:38px auto}
+#s5 .list{font-size:46px;font-weight:600;animation:up 700ms 20000ms both;line-height:1.9}
+#s5 .list i{color:var(--gold);font-style:normal;margin:0 14px}
+#s5 .cta{margin-top:56px;font-size:60px;font-weight:800;color:var(--navy2);background:linear-gradient(135deg,var(--gold2),var(--gold));padding:22px 80px 30px;border-radius:999px;box-shadow:0 16px 40px rgba(0,0,0,.4);animation:pop 900ms 20450ms both}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="glow"></div>
+  <svg class="bgsvg" viewBox="0 0 1080 1920">
+    <path d="M120 0 V260 L220 360 V620" style="animation-delay:0ms"/>
+    <path d="M300 0 V140 L380 220 V420" style="animation-delay:400ms"/>
+    <path d="M960 0 V320 L860 420 V700" style="animation-delay:200ms"/>
+    <path d="M780 0 V180 L720 240 V380" style="animation-delay:700ms"/>
+    <path d="M120 1920 V1640 L240 1520 V1300" style="animation-delay:300ms"/>
+    <path d="M340 1920 V1760 L420 1680 V1560" style="animation-delay:900ms"/>
+    <path d="M960 1920 V1600 L840 1480 V1240" style="animation-delay:500ms"/>
+    <path d="M760 1920 V1780 L700 1720 V1600" style="animation-delay:1100ms"/>
+    <circle cx="220" cy="620" r="12" style="animation-delay:2600ms"/>
+    <circle cx="380" cy="420" r="12" style="animation-delay:2200ms"/>
+    <circle cx="860" cy="700" r="12" style="animation-delay:2800ms"/>
+    <circle cx="720" cy="380" r="12" style="animation-delay:2400ms"/>
+    <circle cx="240" cy="1300" r="12" style="animation-delay:2700ms"/>
+    <circle cx="420" cy="1560" r="12" style="animation-delay:2300ms"/>
+    <circle cx="840" cy="1240" r="12" style="animation-delay:2900ms"/>
+    <circle cx="700" cy="1600" r="12" style="animation-delay:2500ms"/>
+  </svg>
+  <div class="frame"></div>
+
+  <section class="scene" id="s1">
+    <div class="small">للطلبة • للأساتذة • للمكاتب</div>
+    <div class="rule"></div>
+    <h1><span class="a">كل ما تحتاجه</span><span class="b">للدراسة والعمل</span><span class="c">بمكان واحد</span></h1>
+  </section>
+
+  <section class="scene" id="s2">
+    <div class="medwrap">
+      <svg viewBox="0 0 840 840"><circle cx="420" cy="420" r="410"/></svg>
+      <div class="med"><img src="logo.jpg"><div class="sh"></div></div>
+    </div>
+    <h2>مكتب القيثارة</h2>
+    <p>للاستنساخ والقرطاسية</p>
+  </section>
+
+  <section class="scene" id="s3">
+    <h2>خدماتنا <b>المتكاملة</b></h2>
+    <div class="rule"></div>
+    <div>
+      <div class="card" style="animation-delay:8000ms">
+        <div class="ico"><svg viewBox="0 0 24 24"><rect x="8" y="3" width="12" height="13" rx="1.5"/><path d="M16 16v3.5A1.5 1.5 0 0 1 14.5 21h-9A1.5 1.5 0 0 1 4 19.500v-10A1.5 1.5 0 0 1 5.5 8H8"/></svg></div>
+        <div><div class="t">استنساخ</div><div class="d">سريع • واضح • بكميات كبيرة</div></div>
+      </div>
+      <div class="card" style="animation-delay:9100ms">
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M7 8V3h10v5"/><rect x="3" y="8" width="18" height="9" rx="2"/><rect x="7" y="14" width="10" height="7"/><path d="M17 11.500h.5"/></svg></div>
+        <div><div class="t">طباعة</div><div class="d">ملوّنة وأبيض وأسود بجودة عالية</div></div>
+      </div>
+      <div class="card" style="animation-delay:10200ms">
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M4 8h3.500l1.5-2.500h6L16.5 8H20a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.6"/></svg></div>
+        <div><div class="t">تصوير</div><div class="d">تصوير المستندات والوثائق بدقّة</div></div>
+      </div>
+      <div class="card" style="animation-delay:11300ms">
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M4 20l1-4.500L16.5 4a2.1 2.1 0 0 1 3 3L8 18.5 4 20z"/><path d="M14.5 6l3 3"/></svg></div>
+        <div><div class="t">قرطاسية</div><div class="d">كل مستلزمات المدرسة والمكتب</div></div>
+      </div>
+      <div class="card" style="animation-delay:12400ms">
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M12 6.500C10 5 7 4.5 3.5 5v13c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.500V5C17 4.5 14 5 12 6.500z"/><path d="M12 6.500V19.5"/></svg></div>
+        <div><div class="t">ملازم دراسية</div><div class="d">للدراستين العربية والكوردية</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="scene" id="s4">
+    <div class="books"><svg viewBox="0 0 24 24" fill="none" stroke="#e6cd94" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.500C10 5 7 4.5 3.5 5v13c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.500V5C17 4.5 14 5 12 6.500z"/><path d="M12 6.500V19.500M6 8.500c1.5 0 2.8.2 4 .7M6 11.500c1.5 0 2.8.2 4 .7M18 8.500c-1.5 0-2.8.2-4 .7M18 11.500c-1.5 0-2.8.2-4 .7"/></svg></div>
+    <h2>ملازم</h2>
+    <h3>لجميع المراحل • للدراستين</h3>
+    <div class="pills"><div class="pill ar">العربية</div><div class="pill ku">الكوردية</div></div>
+    <div class="ku-line">مەلزەمەی خوێندنی عەرەبی و کوردی</div>
+  </section>
+
+  <section class="scene" id="s5">
+    <div class="medwrap">
+      <svg viewBox="0 0 624 624"><circle cx="312" cy="312" r="304"/></svg>
+      <div class="med"><img src="logo.jpg"><div class="sh"></div></div>
+    </div>
+    <h2>مكتب القيثارة</h2>
+    <p>للاستنساخ والقرطاسية</p>
+    <div class="rule"></div>
+    <div class="list">استنساخ<i>•</i>طباعة<i>•</i>تصوير<br>قرطاسية<i>•</i>ملازم</div>
+    <div class="cta">تفضّلوا بزيارتنا</div>
+  </section>
+</div>
+</body>
+</html>
