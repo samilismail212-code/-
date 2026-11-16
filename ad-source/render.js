@@ -3,7 +3,7 @@ const { chromium } = require('playwright');
 const { spawn } = require('child_process');
 const path = require('path');
 
-const FPS = 30, DUR = 22, W = 1080, H = 1920;
+const FPS = 30, DUR = 25, W = 1080, H = 1920;
 const only = process.argv[2] === 'stills';
 
 (async () => {
@@ -17,7 +17,7 @@ const only = process.argv[2] === 'stills';
   }, ms);
 
   if (only) {
-    for (const t of [2600, 6000, 13800, 17800, 21500]) {
+    for (const t of [16500, 17800, 20500, 24500]) {
       await seek(t);
       await page.screenshot({ path: `still_${t}.jpg`, type: 'jpeg', quality: 80 });
     }

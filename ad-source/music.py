@@ -1,5 +1,5 @@
 import numpy as np, wave
-SR=44100; DUR=22.0; N=int(SR*DUR)
+SR=44100; DUR=25.0; N=int(SR*DUR)
 rng=np.random.default_rng(7)
 L=np.zeros(N+SR*4); R=np.zeros(N+SR*4)
 def pluck(f,dur=2.6,bright=0.5):
@@ -31,9 +31,9 @@ m=lambda n:440*2**((n-69)/12)
 bar=2.2; e=bar/8
 chords=[[50,57,62,65,69,74],[46,53,58,62,65,70],[41,53,57,60,65,69],[48,55,60,64,67,72]]
 pat=[0,2,3,4,5,4,3,2]
-for b in range(10):
+for b in range(11):
     c=chords[b%4]; t0=b*bar
-    if b==9: break
+    if b==10: break
     pad(t0,[m(c[0]),m(c[2]),m(c[3])],bar+0.6)
     add(t0,m(c[0]-12),0.38,0.5,3.0,0.2)
     if b>=1:
@@ -45,11 +45,11 @@ for b in range(10):
         mel=[c[5]+12,c[4]+12,c[5]+12,c[3]+12]
         for i,nn in enumerate(mel): add(t0+i*2*e,m(nn),0.13,0.7,1.8,0.9)
 # final glissando + chord at 19.8
-t=19.8
+t=22.0
 for i,nn in enumerate([50,57,62,65,69,74,77,81,86]): add(t+i*0.055,m(nn),0.3,0.2+0.07*i,3.5,0.7)
 pad(t,[m(50),m(57),m(65)],2.4,0.06)
 # accents on scene changes
-for t in [3.5,7.3,15.2]:
+for t in [3.5,7.3,15.2,17.3]:
     for i,nn in enumerate([62,69,74,81]): add(t+i*0.05,m(nn),0.2,0.3+0.15*i,2.5,0.8)
 st=np.stack([L[:N],R[:N]],1)
 # simple reverb-ish delays

@@ -79,31 +79,37 @@ body{font-family:Kufi,Vazir,sans-serif;color:var(--cream)}
 .card .d{font-size:36px;font-weight:500;color:#5b6b78;font-family:Vazir,Kufi;line-height:1.4}
 
 /* scene 4 */
-#s4{animation:scene 3700ms 15200ms both}
-#s4 .books{animation:pop 900ms 15400ms both}
-#s4 .books svg{width:380px;height:380px}
-#s4 h2{font-size:150px;font-weight:900;color:var(--gold2);animation:up 700ms 15650ms both;line-height:1.4}
-#s4 h3{font-size:74px;font-weight:700;animation:up 700ms 15900ms both}
-.pills{display:flex;gap:36px;margin-top:56px}
-.pill{font-size:72px;font-weight:800;padding:20px 64px 26px;border-radius:999px}
-.pill.ar{background:var(--cream);color:var(--navy);animation:pop 800ms 16250ms both}
-.pill.ku{background:linear-gradient(135deg,var(--gold2),var(--gold));color:var(--navy2);animation:pop 800ms 16550ms both}
-#s4 .ku-line{font-family:Vazir,Kufi;font-size:54px;font-weight:600;margin-top:60px;color:var(--cream);opacity:.92;animation:up 700ms 16950ms both}
+#s4{animation:scene 6300ms 15200ms both;justify-content:flex-start;padding-top:150px}
+#s4 h2{font-size:124px;font-weight:900;color:var(--gold2);animation:up 700ms 15400ms both;line-height:1.4}
+#s4 h3{font-size:43px;font-weight:600;animation:up 700ms 15650ms both;margin-bottom:26px}
+.lbl{display:inline-block;font-size:50px;font-weight:800;padding:8px 54px 14px;border-radius:999px;margin:34px 0 26px}
+.lbl.ar{background:var(--cream);color:var(--navy);animation:pop 700ms 16000ms both}
+.lbl.ku{background:linear-gradient(135deg,var(--gold2),var(--gold));color:var(--navy2);animation:pop 700ms 17300ms both}
+.row{display:flex;gap:30px;justify-content:center}
+@keyframes cov{0%{opacity:0;transform:translateY(90px) rotate(var(--r0)) scale(.8)}100%{opacity:1;transform:rotate(var(--r)) scale(1)}}
+.cov{position:relative;width:270px;height:372px;border-radius:10px 22px 22px 10px;background:linear-gradient(160deg,#fffdf7,#efe7d4);box-shadow:0 22px 44px rgba(0,0,0,.45),inset -10px 0 0 rgba(0,0,0,.05);overflow:hidden;color:var(--navy);animation:cov 800ms both cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;align-items:center}
+.cov:before{content:"";position:absolute;right:0;top:0;bottom:0;width:26px;background:repeating-linear-gradient(180deg,transparent 0 12px,rgba(0,0,0,.28) 12px 20px),var(--c)}
+.cov .band{width:100%;height:92px;background:var(--c);color:#fff;font-size:34px;font-weight:700;display:flex;align-items:center;justify-content:center;padding-right:26px}
+.cov .sub{font-size:43px;font-weight:900;line-height:1.3;margin-top:34px;padding-right:26px}
+.cov .ln{width:120px;height:5px;border-radius:3px;background:var(--gold);margin:18px 26px 0 0}
+.cov .mini{position:absolute;bottom:20px;left:calc(50% - 13px);transform:translateX(-50%);width:84px;height:84px;border-radius:50%;overflow:hidden;box-shadow:0 0 0 3px var(--gold)}
+.cov .mini img{position:absolute;width:96px;left:-6.1px;top:-4.8px}
+#s4 .ku-line{font-family:Vazir,Kufi;font-size:48px;font-weight:600;margin-top:44px;color:var(--cream);opacity:.92;animation:up 700ms 18500ms both}
 
 /* scene 5 */
-#s5{animation:sceneStay 3200ms 18800ms both}
-#s5 .medwrap{animation:pop 1000ms 18950ms both}
+#s5{animation:sceneStay 3200ms 21300ms both}
+#s5 .medwrap{animation:pop 1000ms 21450ms both}
 #s5 .med{width:560px;height:560px}
 #s5 .med img{width:640px;left:-40.9px;top:-32px}
-#s5 .sh{animation:shine 1300ms 20000ms both}
-#s5 svg{left:-32px;top:-32px;width:624px;height:624px;animation:spin 20000ms 18800ms linear both}
+#s5 .sh{animation:shine 1300ms 22500ms both}
+#s5 svg{left:-32px;top:-32px;width:624px;height:624px;animation:spin 20000ms 21300ms linear both}
 #s5 svg circle{stroke-dasharray:180 50 24 50}
-#s5 h2{font-size:124px;font-weight:900;margin-top:64px;animation:up 700ms 19400ms both}
-#s5 p{font-size:60px;font-weight:600;color:var(--gold2);animation:up 700ms 19650ms both}
-#s5 .rule{animation:grow 800ms 19800ms both;margin:38px auto}
-#s5 .list{font-size:46px;font-weight:600;animation:up 700ms 20000ms both;line-height:1.9}
+#s5 h2{font-size:124px;font-weight:900;margin-top:64px;animation:up 700ms 21900ms both}
+#s5 p{font-size:60px;font-weight:600;color:var(--gold2);animation:up 700ms 22150ms both}
+#s5 .rule{animation:grow 800ms 22300ms both;margin:38px auto}
+#s5 .list{font-size:46px;font-weight:600;animation:up 700ms 22500ms both;line-height:1.9}
 #s5 .list i{color:var(--gold);font-style:normal;margin:0 14px}
-#s5 .cta{margin-top:56px;font-size:60px;font-weight:800;color:var(--navy2);background:linear-gradient(135deg,var(--gold2),var(--gold));padding:22px 80px 30px;border-radius:999px;box-shadow:0 16px 40px rgba(0,0,0,.4);animation:pop 900ms 20450ms both}
+#s5 .cta{margin-top:56px;font-size:60px;font-weight:800;color:var(--navy2);background:linear-gradient(135deg,var(--gold2),var(--gold));padding:22px 80px 30px;border-radius:999px;box-shadow:0 16px 40px rgba(0,0,0,.4);animation:pop 900ms 22950ms both}
 </style>
 </head>
 <body>
@@ -172,10 +178,12 @@ body{font-family:Kufi,Vazir,sans-serif;color:var(--cream)}
   </section>
 
   <section class="scene" id="s4">
-    <div class="books"><svg viewBox="0 0 24 24" fill="none" stroke="#e6cd94" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.500C10 5 7 4.5 3.5 5v13c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.500V5C17 4.5 14 5 12 6.500z"/><path d="M12 6.500V19.500M6 8.500c1.5 0 2.8.2 4 .7M6 11.500c1.5 0 2.8.2 4 .7M18 8.500c-1.5 0-2.8.2-4 .7M18 11.500c-1.5 0-2.8.2-4 .7"/></svg></div>
-    <h2>ملازم</h2>
-    <h3>لجميع المراحل • للدراستين</h3>
-    <div class="pills"><div class="pill ar">العربية</div><div class="pill ku">الكوردية</div></div>
+    <h2>ملازم دراسية</h2>
+    <h3>لجميع المراحل • للدراستين العربية والكوردية</h3>
+    <div class="lbl ar">الدراسة العربية</div>
+    <div class="row"><div class="cov" style="--c:#0d3554;--r:-3deg;--r0:9deg;animation-delay:16200ms"><div class="band">ملزمة</div><div class="sub">الرياضيات</div><div class="ln"></div><div class="mini"><img src="logo.jpg"></div></div><div class="cov" style="--c:#1c6e9c;--r:0deg;--r0:0deg;animation-delay:16400ms"><div class="band">ملزمة</div><div class="sub">الفيزياء</div><div class="ln"></div><div class="mini"><img src="logo.jpg"></div></div><div class="cov" style="--c:#a8823a;--r:3deg;--r0:-9deg;animation-delay:16600ms"><div class="band">ملزمة</div><div class="sub">الكيمياء</div><div class="ln"></div><div class="mini"><img src="logo.jpg"></div></div></div>
+    <div class="lbl ku">الدراسة الكوردية</div>
+    <div class="row"><div class="cov" style="--c:#a8823a;--r:-3deg;--r0:9deg;animation-delay:17500ms"><div class="band">مەلزەمە</div><div class="sub">بیرکاری</div><div class="ln"></div><div class="mini"><img src="logo.jpg"></div></div><div class="cov" style="--c:#0d3554;--r:0deg;--r0:0deg;animation-delay:17700ms"><div class="band">مەلزەمە</div><div class="sub">فیزیا</div><div class="ln"></div><div class="mini"><img src="logo.jpg"></div></div><div class="cov" style="--c:#1c6e9c;--r:3deg;--r0:-9deg;animation-delay:17900ms"><div class="band">مەلزەمە</div><div class="sub">کیمیا</div><div class="ln"></div><div class="mini"><img src="logo.jpg"></div></div></div>
     <div class="ku-line">مەلزەمەی خوێندنی عەرەبی و کوردی</div>
   </section>
 
